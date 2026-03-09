@@ -67,6 +67,22 @@
             max-height: 1000px;
             transition: max-height 0.5s ease-in;
         }
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease;
+            opacity: 0;
+        }
+        .mobile-submenu.open {
+            max-height: 320px;
+            opacity: 1;
+        }
+        .mobile-submenu-toggle .submenu-icon {
+            transition: transform 0.3s ease;
+        }
+        .mobile-submenu-toggle[aria-expanded="true"] .submenu-icon {
+            transform: rotate(180deg);
+        }
 
         /* ── Hero Carousel ── */
         .carousel-container {
@@ -157,10 +173,13 @@
                         Esplora
                         <span class="material-symbols-outlined ml-1 text-[18px] transition-transform duration-200">expand_more</span>
                     </button>
-                    <div class="dropdown-menu absolute left-0 top-[60px] w-60 bg-white dark:bg-[#22251d] rounded-xl shadow-xl py-2 z-50 opacity-0 invisible transition-all duration-300 transform -translate-y-2 border border-slate-100 dark:border-slate-800">
+                    <div class="dropdown-menu absolute left-0 top-[60px] w-64 bg-white dark:bg-[#22251d] rounded-xl shadow-xl py-2 z-50 opacity-0 invisible transition-all duration-300 transform -translate-y-2 border border-slate-100 dark:border-slate-800">
                         <div class="px-5 py-2 text-xs font-bold text-slate-400 uppercase tracking-widest">Scopri la zona</div>
                         <a href="#servizi" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
                             <span class="material-symbols-outlined text-primary mr-3 text-[22px]">room_service</span> I Nostri Servizi
+                        </a>
+                        <a href="#ubicazione" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
+                            <span class="material-symbols-outlined text-primary mr-3 text-[22px]">location_on</span> Ubicazione
                         </a>
                         <a href="#posti" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
                             <span class="material-symbols-outlined text-primary mr-3 text-[22px]">map</span> Posti da visitare
@@ -177,27 +196,20 @@
                         Guida
                         <span class="material-symbols-outlined ml-1 text-[18px] transition-transform duration-200">expand_more</span>
                     </button>
-                    <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 top-[60px] w-72 bg-white dark:bg-[#22251d] rounded-xl shadow-xl py-2 z-50 opacity-0 invisible transition-all duration-300 border border-slate-100 dark:border-slate-800">
-                        <div class="grid grid-cols-2 gap-2 p-3">
-                            <a href="#trasporti" class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-primary/5 transition-colors duration-200 group text-center">
-                                <div class="bg-primary/10 p-2 rounded-full mb-2 group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-primary">directions_subway</span>
-                                </div>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Trasporti</span>
-                            </a>
-                            <a href="#regole" class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-primary/5 transition-colors duration-200 group text-center">
-                                <div class="bg-primary/10 p-2 rounded-full mb-2 group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-primary">rule</span>
-                                </div>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Regole</span>
-                            </a>
-                            <a href="#supermercati" class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-primary/5 transition-colors duration-200 group text-center col-span-2">
-                                <div class="bg-primary/10 p-2 rounded-full mb-2 group-hover:scale-110 transition-transform">
-                                    <span class="material-symbols-outlined text-primary">shopping_bag</span>
-                                </div>
-                                <span class="font-bold text-slate-800 dark:text-slate-200 text-sm">Supermercati</span>
-                            </a>
-                        </div>
+                    <div class="dropdown-menu absolute left-1/2 -translate-x-1/2 top-[60px] w-64 bg-white dark:bg-[#22251d] rounded-xl shadow-xl py-2 z-50 opacity-0 invisible transition-all duration-300 transform -translate-y-2 border border-slate-100 dark:border-slate-800">
+                        <div class="px-5 py-2 text-xs font-bold text-slate-400 uppercase tracking-widest">Guida pratica</div>
+                        <a href="#trasporti" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
+                            <span class="material-symbols-outlined text-primary mr-3 text-[22px]">directions_subway</span> Trasporti
+                        </a>
+                        <a href="#regole" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
+                            <span class="material-symbols-outlined text-primary mr-3 text-[22px]">rule</span> Regole della casa
+                        </a>
+                        <a href="#supermercati" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
+                            <span class="material-symbols-outlined text-primary mr-3 text-[22px]">shopping_bag</span> Supermercati
+                        </a>
+                        <a href="#informazioni" class="px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-primary/5 hover:text-primary flex items-center transition-colors duration-200 font-medium">
+                            <span class="material-symbols-outlined text-primary mr-3 text-[22px]">info</span> Informazioni utili
+                        </a>
                     </div>
                 </div>
 
@@ -223,31 +235,49 @@
                 <span class="material-symbols-outlined text-primary mr-4 text-[24px]">home</span> Home
             </a>
             
-            <div class="group">
-                <button class="w-full flex justify-between items-center px-5 py-3.5 rounded-xl text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 transition-colors duration-200 focus:bg-primary/5">
+            <div>
+                <button type="button" class="mobile-submenu-toggle w-full flex justify-between items-center px-5 py-3.5 rounded-xl text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 transition-colors duration-200" data-mobile-submenu="explore" aria-expanded="false" aria-controls="mobile-submenu-explore">
                     <div class="flex items-center">
                         <span class="material-symbols-outlined text-primary mr-4 text-[24px]">explore</span> Esplora
                     </div>
-                    <span class="material-symbols-outlined transition-transform duration-300 group-focus:rotate-180">expand_more</span>
+                    <span class="material-symbols-outlined submenu-icon">expand_more</span>
                 </button>
-                <div class="pl-14 mt-1 space-y-1 hidden group-focus:block mb-3">
-                    <a href="#servizi" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">I Nostri Servizi</a>
-                    <a href="#posti" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">Posti da visitare</a>
-                    <a href="#mangiare" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">Dove mangiare</a>
+                <div id="mobile-submenu-explore" class="mobile-submenu pl-14 mt-1 space-y-1 mb-3" aria-hidden="true">
+                    <a href="#servizi" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">room_service</span>I Nostri Servizi
+                    </a>
+                    <a href="#ubicazione" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">location_on</span>Ubicazione
+                    </a>
+                    <a href="#posti" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">map</span>Posti da visitare
+                    </a>
+                    <a href="#mangiare" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">restaurant</span>Dove mangiare
+                    </a>
                 </div>
             </div>
 
-            <div class="group">
-                <button class="w-full flex justify-between items-center px-5 py-3.5 rounded-xl text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 transition-colors duration-200 focus:bg-primary/5">
+            <div>
+                <button type="button" class="mobile-submenu-toggle w-full flex justify-between items-center px-5 py-3.5 rounded-xl text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary hover:bg-primary/5 transition-colors duration-200" data-mobile-submenu="guide" aria-expanded="false" aria-controls="mobile-submenu-guide">
                     <div class="flex items-center">
                         <span class="material-symbols-outlined text-primary mr-4 text-[24px]">info</span> Guida Pratica
                     </div>
-                    <span class="material-symbols-outlined transition-transform duration-300 group-focus:rotate-180">expand_more</span>
+                    <span class="material-symbols-outlined submenu-icon">expand_more</span>
                 </button>
-                <div class="pl-14 mt-1 space-y-1 hidden group-focus:block mb-3">
-                    <a href="#trasporti" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">Trasporti</a>
-                    <a href="#regole" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">Regole della casa</a>
-                    <a href="#supermercati" class="mobile-link block px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5">Supermercati</a>
+                <div id="mobile-submenu-guide" class="mobile-submenu pl-14 mt-1 space-y-1 mb-3" aria-hidden="true">
+                    <a href="#trasporti" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">directions_subway</span>Trasporti
+                    </a>
+                    <a href="#regole" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">rule</span>Regole della casa
+                    </a>
+                    <a href="#supermercati" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">shopping_bag</span>Supermercati
+                    </a>
+                    <a href="#informazioni" class="mobile-link flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-colors duration-200">
+                        <span class="material-symbols-outlined text-primary mr-3 text-[18px]">info</span>Informazioni utili
+                    </a>
                 </div>
             </div>
 
@@ -476,10 +506,9 @@
             </div>
 
             <div class="lg:w-1/3 bg-white dark:bg-background-dark border border-primary/20 rounded-2xl p-8 shadow-sm relative overflow-hidden flex flex-col justify-center">
-                <span class="material-symbols-outlined text-primary text-[160px] opacity-5 absolute -bottom-6 -right-6 pointer-events-none">wifi</span>
+                <span class="material-symbols-outlined text-primary text-[84px] opacity-10 absolute top-4 right-4 pointer-events-none">wifi</span>
                 <div class="flex items-center gap-3 mb-8 relative z-10">
-                    <span class="material-symbols-outlined text-primary text-3xl">wifi</span>
-                    <h3 class="text-primary text-2xl font-bold serif-title">Rete wifi</h3>
+                    <h3 class="text-primary text-2xl font-bold serif-title">Wi-Fi</h3>
                 </div>
                 <div class="space-y-6 relative z-10 w-full">
                     <div>
@@ -488,7 +517,13 @@
                     </div>
                     <div>
                         <h4 class="text-primary text-xs font-bold uppercase tracking-wider mb-2">Password</h4>
-                        <p class="text-slate-900 dark:text-slate-100 text-lg font-bold bg-primary/5 p-4 rounded-xl border border-primary/10">Rediroma05</p>
+                        <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100 text-lg font-bold bg-primary/5 p-2 rounded-xl border border-primary/10">
+                            <p id="wifi-password" class="flex-1 px-2 py-2">Rediroma05</p>
+                            <button id="copy-wifi-password" type="button" class="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-white/80 dark:bg-background-dark/80 text-primary hover:bg-primary hover:text-white transition-colors duration-200 active:scale-95" title="Copia password wifi" aria-label="Copia password wifi">
+                                <span class="material-symbols-outlined text-[22px]">content_copy</span>
+                            </button>
+                        </div>
+                        <p id="wifi-copy-feedback" class="text-primary text-xs font-semibold mt-2 opacity-0 transition-opacity duration-200">Password copiata</p>
                     </div>
                 </div>
             </div>
@@ -930,11 +965,44 @@
             });
         }
 
+        const mobileSubmenuButtons = document.querySelectorAll('.mobile-submenu-toggle');
+
+        function closeMobileSubmenus() {
+            mobileSubmenuButtons.forEach(button => {
+                const submenuId = button.getAttribute('aria-controls');
+                const submenu = submenuId ? document.getElementById(submenuId) : null;
+                button.setAttribute('aria-expanded', 'false');
+                if (submenu) {
+                    submenu.classList.remove('open');
+                    submenu.setAttribute('aria-hidden', 'true');
+                }
+            });
+        }
+
+        mobileSubmenuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const submenuId = button.getAttribute('aria-controls');
+                const submenu = submenuId ? document.getElementById(submenuId) : null;
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+                closeMobileSubmenus();
+
+                if (!submenu || isExpanded) {
+                    return;
+                }
+
+                button.setAttribute('aria-expanded', 'true');
+                submenu.classList.add('open');
+                submenu.setAttribute('aria-hidden', 'false');
+            });
+        });
+
         // Cierra el menú móvil al hacer click en cualquier link interno
         const mobileLinks = document.querySelectorAll('.mobile-link');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    closeMobileSubmenus();
                     mobileMenuButton.click(); // Simula el click para cerrar con animación
                 }
             });
@@ -989,6 +1057,7 @@
         // Maneja el redimensionamiento de pantalla (reset de mobile menu)
         window.addEventListener('resize', function() {
             if (window.innerWidth > 1024 && mobileMenu) {
+                closeMobileSubmenus();
                 mobileMenu.classList.remove('open');
                 mobileMenu.classList.add('hidden');
                 const menuButton = document.getElementById('mobile-menu-button');
@@ -998,6 +1067,59 @@
                 }
             }
         });
+
+        const copyWifiPasswordButton = document.getElementById('copy-wifi-password');
+        const wifiPassword = document.getElementById('wifi-password');
+        const wifiCopyFeedback = document.getElementById('wifi-copy-feedback');
+        let wifiCopyFeedbackTimeout;
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+
+        async function copyWifiPassword() {
+            if (!wifiPassword) return;
+
+            const passwordText = wifiPassword.textContent.trim();
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(passwordText);
+                } else {
+                    fallbackCopyText(passwordText);
+                }
+
+                if (wifiCopyFeedback) {
+                    wifiCopyFeedback.textContent = 'Password copiata';
+                    wifiCopyFeedback.classList.remove('opacity-0');
+                    clearTimeout(wifiCopyFeedbackTimeout);
+                    wifiCopyFeedbackTimeout = setTimeout(() => {
+                        wifiCopyFeedback.classList.add('opacity-0');
+                    }, 1800);
+                }
+            } catch (error) {
+                if (wifiCopyFeedback) {
+                    wifiCopyFeedback.textContent = 'Copia non riuscita';
+                    wifiCopyFeedback.classList.remove('opacity-0');
+                    clearTimeout(wifiCopyFeedbackTimeout);
+                    wifiCopyFeedbackTimeout = setTimeout(() => {
+                        wifiCopyFeedback.classList.add('opacity-0');
+                    }, 2200);
+                }
+            }
+        }
+
+        if (copyWifiPasswordButton) {
+            copyWifiPasswordButton.addEventListener('click', copyWifiPassword);
+        }
     });
 </script>
 
