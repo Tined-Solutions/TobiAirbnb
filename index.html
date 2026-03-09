@@ -67,6 +67,66 @@
             max-height: 1000px;
             transition: max-height 0.5s ease-in;
         }
+
+        /* ── Hero Carousel ── */
+        .carousel-container {
+            perspective: 1000px;
+            touch-action: pan-y pinch-zoom;
+        }
+        .carousel-track {
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .carousel-item {
+            backface-visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .carousel-item.active {
+            opacity: 1;
+            transform: scale(1) translateZ(0);
+        }
+        @media (max-width: 640px) {
+            .carousel-item.prev {
+                opacity: 0;
+                transform: scale(0.8) translateX(-50%) translateZ(-100px);
+            }
+            .carousel-item.next {
+                opacity: 0;
+                transform: scale(0.8) translateX(50%) translateZ(-100px);
+            }
+        }
+        @media (min-width: 641px) {
+            .carousel-item.prev {
+                opacity: 0.7;
+                transform: scale(0.9) translateX(-100%) translateZ(-100px);
+            }
+            .carousel-item.next {
+                opacity: 0.7;
+                transform: scale(0.9) translateX(100%) translateZ(-100px);
+            }
+        }
+        .carousel-item.hidden {
+            opacity: 0;
+            transform: scale(0.8) translateZ(-200px);
+        }
+        .hero-nav-btn {
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        @media (hover: hover) {
+            .hero-nav-btn:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.1);
+            }
+        }
+        .hero-nav-btn:active {
+            transform: scale(0.95);
+        }
+        .progress-bar {
+            transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
@@ -199,20 +259,79 @@
 </nav>
 
 <main>
-<section id="home" class="@container scroll-mt-20">
-    <div class="p-0 @[480px]:p-4">
-        <div class="flex min-h-[520px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:rounded-xl items-center justify-center p-6 text-center" data-alt="Luxury bedroom with elegant Italian furniture and soft lighting" style='background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2MCbiHiu7IKDDlQysACEtbQ94W7s8-pOlNGwdGHFw-mqU_9O7HM5DgPkB4QudBCJPZcpb1rIbaFfkIwtPOLM8rrxE8lzBJt39iyi1bHYGKZldiMWGMilNlFpGFsglYRuKa2H7AmOeEne3VjrfdY6p-8VP_TV4sfs-d1yX1jt84gdgd4J6j1lEoW2YuWCsbA3ybRbiDM15an6A-bC4QzjleuFhSPTSYADWItf7U7__X31_FRcZi3vNEW4rhSXX-mGKcCyCRjKIKLc");'>
-            <div class="flex flex-col gap-4 max-w-2xl">
-                <h1 class="text-white text-4xl font-bold leading-tight @[480px]:text-6xl serif-title">
-                    Benvenuto a casa nostra!
-                </h1>
-                <p class="text-white/90 text-lg font-normal leading-relaxed italic">
-                    Experience the timeless elegance of Rome in our boutique residence.
-                </p>
+<section id="home" class="scroll-mt-20 relative overflow-hidden bg-[#1a1d15]">
+    <!-- Background atmospheric effects -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
+        <div class="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-primary/10 rounded-full filter blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-primary/10 rounded-full filter blur-3xl"></div>
+    </div>
+
+    <div class="relative w-full max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+        <div class="carousel-container relative">
+
+            <!-- Navigation buttons -->
+            <button class="hero-nav-btn absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation" onclick="heroCarouselPrev()" title="Slide precedente">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button class="hero-nav-btn absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation" onclick="heroCarouselNext()" title="Slide successiva">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Carousel track -->
+            <div class="carousel-track relative h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden">
+
+                <!-- Slide 1 -->
+                <div class="carousel-item active absolute top-0 left-0 w-full h-full">
+                    <div class="w-full h-full p-4 sm:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                            <!-- Sostituisci src con il percorso della tua immagine -->
+                            <img src="assets/pasilloTenuta.webp" alt="La Nostra Casa" class="absolute inset-0 w-full h-full object-fit transition-transform duration-500 group-hover:scale-110" />
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/40 to-primary/20 mix-blend-overlay"></div>
+                            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">La Nostra Casa</h3>
+                                <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">Eleganza e comfort nel cuore di Roma.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item next absolute top-0 left-0 w-full h-full">
+                    <div class="w-full h-full p-4 sm:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                            <!-- Sostituisci src con il percorso della tua immagine -->
+                            <img src="assets\mesaConTe.png" alt="Vivi Roma" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/30 to-[#2a3a15]/40 mix-blend-overlay"></div>
+                            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">Vivi Roma</h3>
+                                <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">Arte, storia e sapori a pochi passi da te.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item hidden absolute top-0 left-0 w-full h-full">
+                    <div class="w-full h-full p-4 sm:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                            <!-- Sostituisci src con il percorso della tua immagine -->
+                            <img src="assets\habitacionTenuta.png" alt="Il Tuo Rifugio" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#415a22]/40 to-primary/20 mix-blend-overlay"></div>
+                            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">Il Tuo Rifugio</h3>
+                                <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">Un angolo di pace per scoprire la Città Eterna.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <a href="#servizi" class="mt-4 flex min-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-primary text-white text-base font-bold transition-transform active:scale-95 hover:bg-primary/90 shadow-lg">
-                <span class="truncate">Prenota Ora</span>
-            </a>
+
         </div>
     </div>
 </section>
@@ -745,7 +864,7 @@
                     <h3 class="text-primary text-sm font-bold uppercase tracking-widest mb-4">Seguici sui nostri social</h3>
                     <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
                         <a class="flex items-center justify-center gap-3 w-full sm:w-auto bg-background-light dark:bg-[#1a1d15] hover:bg-primary text-primary hover:text-white px-7 py-3.5 rounded-full font-bold transition-all shadow-sm border border-primary/10 active:scale-95" href="#">
-                            <span class="material-symbols-outlined text-2xl">facebook</span> Facebook
+                            <span class="material-symbols-outlined text-2xl">facebook </span> Facebook
                         </a>
                         <a class="flex items-center justify-center gap-3 w-full sm:w-auto bg-background-light dark:bg-[#1a1d15] hover:bg-primary text-primary hover:text-white px-7 py-3.5 rounded-full font-bold transition-all shadow-sm border border-primary/10 active:scale-95" href="#">
                             <span class="material-symbols-outlined text-2xl">photo_camera</span> Instagram
@@ -757,7 +876,7 @@
 
             <div class="md:w-[400px] w-full max-w-sm flex-shrink-0 relative z-10">
                 <div class="relative rounded-[2.5rem] overflow-hidden shadow-xl border-[6px] border-white dark:border-[#1a1d15] transform md:rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <img alt="Interior design" class="w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDu3HO15JdOQ0FlmElXD9_tIeAXypSGinR8ayOOVbHDx_Ekcjq4RUt8lx02YmUkuPHa3WDMe73YvLHABL7gsWdjepIr2xy_J-SJj14RiiCS7qvRLzq2nAWizrrxp7v-CqNWEIXY_W4hP7_04R87JWm2di0csvTi1v9A9G7mD4lwPtssfECtpK1NGAcr2te8kAPuDsBGFgTQJVgeX6dFw-YmxjEvTds0Do-nPDMyen8Foh1rPQBi2Vkfapm1XijKFbBB-YNTh_Eoe0"/>
+                    <img alt="Interior design" class="w-full aspect-square object-cover" src="assets/canastito.webp"/>
                 </div>
             </div>
         </div>
@@ -779,7 +898,7 @@
         </div>
         
         <div class="text-xs opacity-50 text-center md:text-right flex flex-col gap-1">
-            <span>© 2024 Tenuta Re di Roma. All rights reserved.</span>
+            <span>© 2026 Tenuta Re di Roma. All rights reserved.</span>
             <span>Dev by <a href="mailto:tinedsolutions@gmail.com" class="hover:text-white transition-colors"><strong class="font-medium tracking-wide">Tined Solutions</strong></a></span>
         </div>
     </div>
@@ -882,5 +1001,85 @@
     });
 </script>
 
+<script>
+    (function () {
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const indicators = document.querySelectorAll('#hero-indicators button');
+        const progressBar = document.querySelector('.progress-bar');
+        let autoAdvanceTimer;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carouselTrack = document.querySelector('.carousel-track');
+
+        if (!carouselTrack || slides.length === 0) return;
+
+        carouselTrack.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carouselTrack.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                diff > 0 ? heroCarouselNext() : heroCarouselPrev();
+            }
+        }, { passive: true });
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.className = 'carousel-item absolute top-0 left-0 w-full h-full';
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index === (currentSlide + 1) % slides.length) {
+                    slide.classList.add('next');
+                } else if (index === (currentSlide - 1 + slides.length) % slides.length) {
+                    slide.classList.add('prev');
+                } else {
+                    slide.classList.add('hidden');
+                }
+            });
+
+            indicators.forEach((indicator, index) => {
+                indicator.className = [
+                    'w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors hover:bg-white/60',
+                    index === currentSlide ? 'bg-white/40' : 'bg-white/20'
+                ].join(' ');
+            });
+
+            if (progressBar) {
+                progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            }
+        }
+
+        function resetAutoAdvance() {
+            clearInterval(autoAdvanceTimer);
+            autoAdvanceTimer = setInterval(heroCarouselNext, 5000);
+        }
+
+        window.heroCarouselNext = function () {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlides();
+            resetAutoAdvance();
+        };
+
+        window.heroCarouselPrev = function () {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlides();
+            resetAutoAdvance();
+        };
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlides();
+                resetAutoAdvance();
+            });
+        });
+
+        updateSlides();
+        resetAutoAdvance();
+    })();
+</script>
 </body>
 </html>
