@@ -219,6 +219,13 @@
                         Contatti
                     </a>
                 </div>
+
+                <div class="flex items-center h-full">
+                    <button onclick="toggleChatbot()" class="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-full font-semibold hover:bg-primary/90 transition-all duration-200 shadow-sm active:scale-95 ml-2">
+                        <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+                        Assistente AI
+                    </button>
+                </div>
             </div>
 
             <div class="flex items-center">
@@ -920,6 +927,104 @@
 
 </main>
 
+<!-- Floating Chat Widget -->
+<style>
+    #chat-widget-window {
+        width: 380px;
+        height: 560px;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px -4px rgba(0,0,0,0.22), 0 4px 16px -2px rgba(0,0,0,0.12);
+        transform-origin: bottom right;
+        transform: scale(0.85) translateY(16px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease;
+        overflow: hidden;
+    }
+    #chat-widget-window.open {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+    #chat-fab {
+        pointer-events: auto;
+        box-shadow: 0 4px 20px rgba(84,106,47,0.45);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #chat-fab:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 28px rgba(84,106,47,0.55);
+    }
+    #chat-fab:active { transform: scale(0.95); }
+
+    /* ── Desktop: open below navbar, top-right ── */
+    @media (min-width: 1024px) {
+        #chat-fab { display: none !important; }
+        #chat-widget {
+            bottom: auto !important;
+            top: 80px;
+        }
+        #chat-widget-window {
+            width: 520px;
+            height: calc(100dvh - 96px);
+            transform-origin: top right;
+            transform: scale(0.85) translateY(-16px);
+        }
+        #chat-widget-window.open {
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    /* Mobile: full-width window */
+    @media (max-width: 480px) {
+        #chat-widget-window {
+            width: calc(100vw - 24px);
+            height: 75dvh;
+            border-radius: 16px;
+        }
+    }
+</style>
+
+<div id="chat-widget" style="position:fixed; bottom:24px; right:20px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; pointer-events:none;">
+
+    <!-- Chat window -->
+    <div id="chat-widget-window" style="position:relative; background:#fff; display:flex; flex-direction:column;">
+
+        <!-- Header -->
+        <div style="background:#546a2f; padding: 14px 16px; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span class="material-symbols-outlined" style="color:#fff; font-size:20px;">smart_toy</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <div style="color:#fff; font-weight:700; font-size:15px; font-family:'Work Sans',sans-serif; line-height:1.2;">Assistente AI</div>
+                <div style="color:rgba(255,255,255,0.8); font-size:12px; font-family:'Work Sans',sans-serif;">Di solito risponde subito</div>
+            </div>
+            <button onclick="toggleChatbot()" aria-label="Chiudi chat" style="background:rgba(255,255,255,0.15); border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.28)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                <span class="material-symbols-outlined" style="color:#fff; font-size:20px;">close</span>
+            </button>
+        </div>
+
+        <!-- iFrame body -->
+        <div style="flex:1; overflow:hidden; background:#f7f7f6;">
+            <iframe
+                src="https://app.boei.help/p/bot/a1420c70-adbd-4ebb-874f-b0242e8b774b"
+                width="100%"
+                style="height:100%; border:0; display:block;"
+                frameborder="0"
+                loading="lazy"
+            ></iframe>
+        </div>
+    </div>
+
+    <!-- FAB bubble -->
+    <button id="chat-fab" onclick="toggleChatbot()" aria-label="Apri assistente AI" style="width:56px; height:56px; border-radius:50%; background:#546a2f; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; position:relative;">
+        <span id="chat-fab-open" class="material-symbols-outlined" style="color:#fff; font-size:28px;">smart_toy</span>
+        <span id="chat-fab-close" class="material-symbols-outlined" style="color:#fff; font-size:28px; display:none;">close</span>
+        <!-- Notification dot -->
+        <span id="chat-notif-dot" style="position:absolute; top:6px; right:6px; width:10px; height:10px; border-radius:50%; background:#ea580c; border:2px solid #fff;"></span>
+    </button>
+</div>
+
 <footer class="bg-slate-900 text-slate-300 py-12 px-6">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="text-center md:text-left">
@@ -1121,6 +1226,29 @@
             copyWifiPasswordButton.addEventListener('click', copyWifiPassword);
         }
     });
+</script>
+<script>
+    (function() {
+        let chatOpen = false;
+        const win = document.getElementById('chat-widget-window');
+        const fabOpen = document.getElementById('chat-fab-open');
+        const fabClose = document.getElementById('chat-fab-close');
+        const notifDot = document.getElementById('chat-notif-dot');
+
+        window.toggleChatbot = function() {
+            chatOpen = !chatOpen;
+            if (chatOpen) {
+                win.classList.add('open');
+                fabOpen.style.display = 'none';
+                fabClose.style.display = '';
+                if (notifDot) notifDot.style.display = 'none';
+            } else {
+                win.classList.remove('open');
+                fabOpen.style.display = '';
+                fabClose.style.display = 'none';
+            }
+        };
+    })();
 </script>
 
 <script>
