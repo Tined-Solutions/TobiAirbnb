@@ -34,7 +34,9 @@
    ============================================ */
 
 .serif-title {
-    font-family: 'Noto Serif', serif;
+    font-family: 'Playfair Display', 'Noto Serif', serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 body {

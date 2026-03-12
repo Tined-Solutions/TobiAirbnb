@@ -22,7 +22,8 @@ tailwind.config = {
             },
             fontFamily: {
                 "display": ["Work Sans", "sans-serif"],
-                "serif": ["Noto Serif", "serif"]
+                "serif": ["Noto Serif", "serif"],
+                "title": ["Playfair Display", "Noto Serif", "serif"]
             },
             borderRadius: {
                 "DEFAULT": "0.25rem",

@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Tenuta Re di Roma</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
 <!-- Tailwind Configuration -->
@@ -218,7 +218,7 @@
         <div class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-primary/10 rounded-full filter blur-3xl"></div>
     </div>
 
-    <div class="relative w-full max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+    <div class="relative w-full max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8 md:py-10">
         <div class="carousel-container relative">
 
             <!-- Navigation buttons -->
@@ -234,14 +234,14 @@
             </button>
 
             <!-- Carousel track -->
-            <div class="carousel-track relative h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden">
+            <div class="carousel-track relative h-[300px] sm:h-[380px] md:h-[460px] lg:h-[520px] xl:h-[480px] overflow-hidden">
 
                 <!-- Slide 1 -->
                 <div class="carousel-item active absolute top-0 left-0 w-full h-full">
-                    <div class="w-full h-full p-4 sm:p-8">
-                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                    <div class="w-full h-full p-3 sm:p-6 md:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15] flex items-center justify-center">
                             <!-- Sostituisci src con il percorso della tua immagine -->
-                            <img src="assets/pasilloTenuta.webp" alt="La Nostra Casa" class="absolute inset-0 w-full h-full object-fit transition-transform duration-500 group-hover:scale-110" />
+                            <img src="assets/pasilloTenuta.webp" alt="La Nostra Casa" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-gradient-to-br from-primary/40 to-primary/20 mix-blend-overlay"></div>
                             <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                                 <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">La Nostra Casa</h3>
@@ -253,10 +253,10 @@
 
                 <!-- Slide 2 -->
                 <div class="carousel-item next absolute top-0 left-0 w-full h-full">
-                    <div class="w-full h-full p-4 sm:p-8">
-                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                    <div class="w-full h-full p-3 sm:p-6 md:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15] flex items-center justify-center">
                             <!-- Sostituisci src con il percorso della tua immagine -->
-                            <img src="assets\mesaConTe.png" alt="Vivi Roma" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <img src="assets\mesaConTe.png" alt="Vivi Roma" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-gradient-to-br from-primary/30 to-[#2a3a15]/40 mix-blend-overlay"></div>
                             <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                                 <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">Vivi Roma</h3>
@@ -265,13 +265,12 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Slide 3 -->
                 <div class="carousel-item hidden absolute top-0 left-0 w-full h-full">
-                    <div class="w-full h-full p-4 sm:p-8">
-                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15]">
+                    <div class="w-full h-full p-3 sm:p-6 md:p-8">
+                        <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group bg-[#1a1d15] flex items-center justify-center">
                             <!-- Sostituisci src con il percorso della tua immagine -->
-                            <img src="assets\habitacionTenuta.png" alt="Il Tuo Rifugio" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                            <img src="assets\habitacionTenuta.png" alt="Il Tuo Rifugio" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                             <div class="absolute inset-0 bg-gradient-to-br from-[#415a22]/40 to-primary/20 mix-blend-overlay"></div>
                             <div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                                 <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold serif-title mb-2 sm:mb-3">Il Tuo Rifugio</h3>
@@ -746,8 +745,8 @@
             <div class="h-1 w-20 bg-primary/70 rounded-full mx-auto"></div>
         </div>
 
-        <div class="flex flex-col md:flex-row w-full gap-4 md:gap-5 h-[400px] overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div class="group relative flex-none w-[80vw] sm:w-[60vw] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
+        <div class="flex flex-row flex-nowrap w-full gap-3 md:gap-5 h-[420px] sm:h-[460px] md:h-[500px] overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 scroll-smooth px-2 sm:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div class="group relative flex-none w-[calc(100vw-40px)] sm:w-[calc(60vw-12px)] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
                 <img alt="Tonnarello" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 md:group-hover:scale-110 md:group-hover:rotate-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3EUzizxSKEKKSjWiYRTb0wiGJuhsLztjpBQS8Inh4su5jt0rJ1h_lU_VGE9NT-lpK3MTVCEKI1cVKxgLsoSoGiNq13txi00MsUwlEW88-EWhE5gJVjrfAzGSqnKFSN80XMGwlIOcdqHHoozBNi9aaQBpYuuBzjyikrHAl4og6ATeZ-YGPifRpEVq3c85wAxeH2Ok6dKfnlNa2_ruFxk2Of7YIPIiJkaEgEYofOh9mRabG26XYpeSU9-zDehhPpLAQMfDajBcxDQo"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d15]/95 via-[#1a1d15]/40 to-transparent opacity-90 md:opacity-80 md:group-hover:opacity-90 transition-opacity duration-500"></div>
                 <div class="absolute inset-0 flex flex-col justify-end p-6 text-center pb-8">
@@ -765,7 +764,7 @@
                 </div>
             </div>
 
-            <div class="group relative flex-none w-[80vw] sm:w-[60vw] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
+            <div class="group relative flex-none w-[calc(100vw-40px)] sm:w-[calc(60vw-12px)] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
                 <img alt="Pizzeria Il Veliero" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 md:group-hover:scale-110 md:group-hover:-rotate-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcHexF1a6jneRIACzzM4tXoSq4xOn_s_ATJD4rzK75BZ-mWhcPpoy5gR9GcqOl3YBSE3MUswaBmmGk43gQ1JQGiAhBm_ploqT8taPiXIOGhNKnN9AKAAfgDm8MD7BZbcvCvleuDNAvDp3Bf4f7ynyiNiAJYlM7L5ItPXVLzX9scDwYSRmxCvTaHArXYbOT3ujmUGLXdFKXzCgs_gc5r-gmKR2QdiKN7d-qwdRTJTiLnP69hhzqqvZX_pISlXYXa6yQhbHqX7pXQY4"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d15]/95 via-[#1a1d15]/40 to-transparent opacity-90 md:opacity-80 md:group-hover:opacity-90 transition-opacity duration-500"></div>
                 <div class="absolute inset-0 flex flex-col justify-end p-6 text-center pb-8">
@@ -783,7 +782,7 @@
                 </div>
             </div>
 
-            <div class="group relative flex-none w-[80vw] sm:w-[60vw] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
+            <div class="group relative flex-none w-[calc(100vw-40px)] sm:w-[calc(60vw-12px)] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
                 <img alt="La Cannoleria Siciliana" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 md:group-hover:scale-110 md:group-hover:rotate-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWjR2vpOysBVuwJ47FHUWRcVtTZysPG8dNe3tGdenDOySY3Tzhx50DojyrNQrnupwefxqSBe1xJdPnyX61SzxJdc72vHHC0gBTKNDAiEi6mz9mX7qAuZjMRVF9BKl-D4kA9mPWd3pTiSHJ5OQvL7VbxeU6WlT5psI6aDID1bSTrzl9e0GnQNPTpG-o3KolaRiKoRA8efgvmIBQU8Q_kVT_od1_KGUOdknovF1zluzJecMB75Ui-_5rs_4IFGP85SQ3smq9VZSFifs"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d15]/95 via-[#1a1d15]/40 to-transparent opacity-90 md:opacity-80 md:group-hover:opacity-90 transition-opacity duration-500"></div>
                 <div class="absolute inset-0 flex flex-col justify-end p-6 text-center pb-8">
