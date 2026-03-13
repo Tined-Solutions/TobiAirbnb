@@ -658,131 +658,111 @@ const LanguageSwitcherController = (function() {
 })();
 
 /* ============================================
-   7. MOBILE HORIZONTAL SCROLL GUARD
+   7. FOOD CAROUSEL CONTROLLER
    ============================================ */
 
-const MobileHorizontalScrollGuardController = (function() {
-    let foodScroller = null;
-    let chatWidget = null;
-    let releaseTimer = null;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let startScrollLeft = 0;
-    let draggingHorizontally = false;
-    const MOBILE_BREAKPOINT = '(max-width: 1023px)';
+const FoodCarouselController = (function() {
+    const SWIPE_THRESHOLD = 45;
 
     /**
-     * Determina si estamos en viewport móvil/tablet
-     * @returns {boolean}
+     * Obtiene el desplazamiento horizontal de una tarjeta incluyendo el gap
+     * @param {HTMLElement} track
+     * @returns {number}
      */
-    function isMobileViewport() {
-        return window.matchMedia(MOBILE_BREAKPOINT).matches;
+    function getStep(track) {
+        const firstCard = track?.firstElementChild;
+        if (!firstCard) return track.clientWidth * 0.9;
+
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+
+        return firstCard.getBoundingClientRect().width + gap;
     }
 
     /**
-     * Bloquea temporalmente la interacción del chat para priorizar el gesto horizontal
+     * Desplaza el carrusel una tarjeta hacia la izquierda o derecha
+     * @param {HTMLElement} track
+     * @param {number} direction - 1 para siguiente, -1 para anterior
      */
-    function lockChatPointerEvents() {
-        if (!chatWidget || !isMobileViewport()) return;
-        chatWidget.classList.add('chat-gesture-lock');
+    function move(track, direction) {
+        track.scrollBy({
+            left: getStep(track) * direction,
+            behavior: 'smooth'
+        });
     }
 
     /**
-     * Libera la interacción del chat tras finalizar el gesto
-     * @param {number} delay - Retraso en ms
+     * Actualiza estado visual y accesibilidad de los botones
+     * @param {HTMLElement} track
+     * @param {HTMLButtonElement} prevBtn
+     * @param {HTMLButtonElement} nextBtn
      */
-    function unlockChatPointerEvents(delay = 120) {
-        if (!chatWidget) return;
+    function updateButtons(track, prevBtn, nextBtn) {
+        const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+        const atStart = track.scrollLeft <= 4;
+        const atEnd = track.scrollLeft >= maxScroll - 4;
 
-        clearTimeout(releaseTimer);
-        releaseTimer = setTimeout(() => {
-            chatWidget.classList.remove('chat-gesture-lock');
-        }, delay);
+        prevBtn.disabled = atStart;
+        nextBtn.disabled = atEnd || maxScroll === 0;
+
+        prevBtn.classList.toggle('is-disabled', atStart);
+        nextBtn.classList.toggle('is-disabled', atEnd || maxScroll === 0);
     }
 
     /**
-     * Limpia estado al pasar a desktop
+     * Configura un carrusel individual
+     * @param {HTMLElement} container
      */
-    function handleResize() {
-        if (!chatWidget || isMobileViewport()) return;
-        chatWidget.classList.remove('chat-gesture-lock');
-        if (foodScroller) {
-            foodScroller.classList.remove('dragging-horizontal');
-        }
-        draggingHorizontally = false;
-    }
+    function setupCarousel(container) {
+        const track = container.querySelector('.food-carousel-track');
+        const prevBtn = container.querySelector('[data-food-carousel-prev]');
+        const nextBtn = container.querySelector('[data-food-carousel-next]');
 
-    /**
-     * Inicia seguimiento del gesto touch
-     * @param {TouchEvent} e
-     */
-    function handleTouchStart(e) {
-        if (!foodScroller || !isMobileViewport() || !e.touches?.length) return;
+        if (!track || !prevBtn || !nextBtn) return;
 
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        startScrollLeft = foodScroller.scrollLeft;
-        draggingHorizontally = false;
-        lockChatPointerEvents();
-    }
+        let touchStartX = 0;
+        let touchStartY = 0;
 
-    /**
-     * Fuerza fallback de desplazamiento horizontal en navegadores móviles conflictivos
-     * @param {TouchEvent} e
-     */
-    function handleTouchMove(e) {
-        if (!foodScroller || !isMobileViewport() || !e.touches?.length) return;
+        prevBtn.addEventListener('click', () => move(track, -1));
+        nextBtn.addEventListener('click', () => move(track, 1));
 
-        const deltaX = e.touches[0].clientX - touchStartX;
-        const deltaY = e.touches[0].clientY - touchStartY;
+        track.addEventListener('scroll', () => updateButtons(track, prevBtn, nextBtn), { passive: true });
 
-        if (!draggingHorizontally) {
-            if (Math.abs(deltaX) <= Math.abs(deltaY) + 4) {
-                return;
-            }
-            draggingHorizontally = true;
-            foodScroller.classList.add('dragging-horizontal');
-        }
+        track.addEventListener('touchstart', (event) => {
+            const touch = event.changedTouches?.[0];
+            if (!touch) return;
 
-        foodScroller.scrollLeft = startScrollLeft - deltaX;
-        lockChatPointerEvents();
-        unlockChatPointerEvents(180);
-        e.preventDefault();
-    }
-
-    /**
-     * Finaliza el gesto y restablece estado
-     */
-    function endTouchGesture() {
-        if (foodScroller) {
-            foodScroller.classList.remove('dragging-horizontal');
-        }
-        draggingHorizontally = false;
-        unlockChatPointerEvents(120);
-    }
-
-    /**
-     * Inicializa la protección de scroll horizontal en la sección de restaurantes
-     */
-    function init() {
-        foodScroller = document.querySelector('#mangiare .overflow-x-auto');
-        chatWidget = document.getElementById('chat-widget');
-
-        if (!foodScroller || !chatWidget) return;
-
-        foodScroller.addEventListener('touchstart', handleTouchStart, { passive: true });
-        foodScroller.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-        foodScroller.addEventListener('touchend', endTouchGesture, { passive: true });
-        foodScroller.addEventListener('touchcancel', endTouchGesture, { passive: true });
-
-        // Al desplazarse con inercia mantenemos el lock y lo soltamos al estabilizar.
-        foodScroller.addEventListener('scroll', () => {
-            lockChatPointerEvents();
-            unlockChatPointerEvents(160);
+            touchStartX = touch.screenX;
+            touchStartY = touch.screenY;
         }, { passive: true });
 
-        window.addEventListener('resize', handleResize, { passive: true });
+        track.addEventListener('touchend', (event) => {
+            const touch = event.changedTouches?.[0];
+            if (!touch) return;
+
+            const deltaX = touchStartX - touch.screenX;
+            const deltaY = Math.abs(touchStartY - touch.screenY);
+
+            if (Math.abs(deltaX) < SWIPE_THRESHOLD || Math.abs(deltaX) <= deltaY) {
+                return;
+            }
+
+            deltaX > 0 ? move(track, 1) : move(track, -1);
+        }, { passive: true });
+
+        window.addEventListener('resize', () => updateButtons(track, prevBtn, nextBtn), { passive: true });
+
+        updateButtons(track, prevBtn, nextBtn);
+    }
+
+    /**
+     * Inicializa todos los carruseles de comidas de la página
+     */
+    function init() {
+        const containers = document.querySelectorAll('.food-carousel-container');
+        if (containers.length === 0) return;
+
+        containers.forEach(setupCarousel);
     }
 
     return {
@@ -801,8 +781,8 @@ document.addEventListener('DOMContentLoaded', function() {
     WifiCopyController.init();
     ChatbotController.init();
     HeroCarouselController.init();
+    FoodCarouselController.init();
     LanguageSwitcherController.init();
-    MobileHorizontalScrollGuardController.init();
 
     console.log('✅ Tenuta Re di Roma - All modules initialized');
 });

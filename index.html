@@ -749,7 +749,20 @@
             <div class="h-1 w-20 bg-primary/70 rounded-full mx-auto"></div>
         </div>
 
-        <div class="flex flex-row flex-nowrap w-full gap-3 md:gap-5 h-[420px] sm:h-[460px] md:h-[500px] overflow-x-auto md:overflow-visible snap-x snap-proximity pb-4 md:pb-0 scroll-smooth px-2 sm:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div class="food-carousel-container relative">
+            <button type="button" class="food-nav-btn hero-nav-btn absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center z-20 text-white" data-food-carousel-prev aria-label="Ristorante precedente">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+
+            <button type="button" class="food-nav-btn hero-nav-btn absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center z-20 text-white" data-food-carousel-next aria-label="Ristorante successivo">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <div class="food-carousel-track flex flex-row flex-nowrap w-full gap-3 md:gap-5 h-[420px] sm:h-[460px] md:h-[500px] overflow-x-auto snap-x snap-proximity pb-4 md:pb-0 scroll-smooth px-2 sm:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div class="group relative flex-none w-[calc(100vw-40px)] sm:w-[calc(60vw-12px)] md:w-auto md:flex-1 md:hover:flex-[1.8] snap-center h-full overflow-hidden transition-all duration-700 ease-in-out cursor-pointer rounded-t-full rounded-b-[2rem] shadow-lg border-[4px] border-white dark:border-[#1a1d15]">
                 <img alt="Tonnarello" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 md:group-hover:scale-110 md:group-hover:rotate-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3EUzizxSKEKKSjWiYRTb0wiGJuhsLztjpBQS8Inh4su5jt0rJ1h_lU_VGE9NT-lpK3MTVCEKI1cVKxgLsoSoGiNq13txi00MsUwlEW88-EWhE5gJVjrfAzGSqnKFSN80XMGwlIOcdqHHoozBNi9aaQBpYuuBzjyikrHAl4og6ATeZ-YGPifRpEVq3c85wAxeH2Ok6dKfnlNa2_ruFxk2Of7YIPIiJkaEgEYofOh9mRabG26XYpeSU9-zDehhPpLAQMfDajBcxDQo"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d15]/95 via-[#1a1d15]/40 to-transparent opacity-90 md:opacity-80 md:group-hover:opacity-90 transition-opacity duration-500"></div>
@@ -802,6 +815,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
