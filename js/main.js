@@ -665,30 +665,80 @@ const FoodCarouselController = (function() {
     const SWIPE_THRESHOLD = 45;
 
     /**
-     * Obtiene el desplazamiento horizontal de una tarjeta incluyendo el gap
+     * Obtiene las tarjetas del carrusel
      * @param {HTMLElement} track
-     * @returns {number}
+     * @returns {HTMLElement[]}
      */
-    function getStep(track) {
-        const firstCard = track?.firstElementChild;
-        if (!firstCard) return track.clientWidth * 0.9;
-
-        const styles = window.getComputedStyle(track);
-        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
-
-        return firstCard.getBoundingClientRect().width + gap;
+    function getCards(track) {
+        return Array.from(track.children);
     }
 
     /**
-     * Desplaza el carrusel una tarjeta hacia la izquierda o derecha
+     * Indica si el track tiene desplazamiento horizontal real
+     * @param {HTMLElement} track
+     * @param {HTMLElement[]} cards
+     * @returns {boolean}
+     */
+    function isScrollable(track, cards) {
+        return cards.length > 1 && (track.scrollWidth - track.clientWidth) > 4;
+    }
+
+    /**
+     * Obtiene el índice de la tarjeta más cercana al inicio visible del track
+     * @param {HTMLElement} track
+     * @param {HTMLElement[]} cards
+     * @returns {number}
+     */
+    function getClosestIndex(track, cards) {
+        let closestIndex = 0;
+        let minDistance = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card, index) => {
+            const distance = Math.abs(card.offsetLeft - track.scrollLeft);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = index;
+            }
+        });
+
+        return closestIndex;
+    }
+
+    /**
+     * Posiciona el carrusel en una tarjeta específica
+     * @param {HTMLElement} track
+     * @param {HTMLElement[]} cards
+     * @param {number} index
+     */
+    function scrollToCard(track, cards, index) {
+        const target = cards[index];
+        if (!target) return;
+
+        track.scrollTo({
+            left: target.offsetLeft,
+            behavior: 'smooth'
+        });
+    }
+
+    /**
+     * Desplaza el carrusel una tarjeta hacia la izquierda o derecha con loop infinito
      * @param {HTMLElement} track
      * @param {number} direction - 1 para siguiente, -1 para anterior
      */
     function move(track, direction) {
-        track.scrollBy({
-            left: getStep(track) * direction,
-            behavior: 'smooth'
-        });
+        const cards = getCards(track);
+        if (!isScrollable(track, cards)) return;
+
+        const currentIndex = getClosestIndex(track, cards);
+        let nextIndex = currentIndex + direction;
+
+        if (nextIndex >= cards.length) {
+            nextIndex = 0;
+        } else if (nextIndex < 0) {
+            nextIndex = cards.length - 1;
+        }
+
+        scrollToCard(track, cards, nextIndex);
     }
 
     /**
@@ -698,15 +748,14 @@ const FoodCarouselController = (function() {
      * @param {HTMLButtonElement} nextBtn
      */
     function updateButtons(track, prevBtn, nextBtn) {
-        const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
-        const atStart = track.scrollLeft <= 4;
-        const atEnd = track.scrollLeft >= maxScroll - 4;
+        const cards = getCards(track);
+        const canNavigate = isScrollable(track, cards);
 
-        prevBtn.disabled = atStart;
-        nextBtn.disabled = atEnd || maxScroll === 0;
+        prevBtn.disabled = !canNavigate;
+        nextBtn.disabled = !canNavigate;
 
-        prevBtn.classList.toggle('is-disabled', atStart);
-        nextBtn.classList.toggle('is-disabled', atEnd || maxScroll === 0);
+        prevBtn.classList.toggle('is-disabled', !canNavigate);
+        nextBtn.classList.toggle('is-disabled', !canNavigate);
     }
 
     /**
