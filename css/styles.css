@@ -269,6 +269,20 @@ body {
     }
 }
 
+/* --- Mobile gesture priority for horizontal food scroller --- */
+@media (max-width: 1023px) {
+    #mangiare .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        touch-action: pan-x;
+    }
+
+    #chat-widget.chat-gesture-lock,
+    #chat-widget.chat-gesture-lock * {
+        pointer-events: none !important;
+    }
+}
+
 /* ============================================
    7. LANGUAGE SWITCHER
    ============================================ */

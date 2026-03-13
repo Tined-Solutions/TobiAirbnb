@@ -617,6 +617,83 @@ const LanguageSwitcherController = (function() {
 })();
 
 /* ============================================
+   7. MOBILE HORIZONTAL SCROLL GUARD
+   ============================================ */
+
+const MobileHorizontalScrollGuardController = (function() {
+    let foodScroller = null;
+    let chatWidget = null;
+    let releaseTimer = null;
+    const MOBILE_BREAKPOINT = '(max-width: 1023px)';
+
+    /**
+     * Determina si estamos en viewport móvil/tablet
+     * @returns {boolean}
+     */
+    function isMobileViewport() {
+        return window.matchMedia(MOBILE_BREAKPOINT).matches;
+    }
+
+    /**
+     * Bloquea temporalmente la interacción del chat para priorizar el gesto horizontal
+     */
+    function lockChatPointerEvents() {
+        if (!chatWidget || !isMobileViewport()) return;
+        chatWidget.classList.add('chat-gesture-lock');
+    }
+
+    /**
+     * Libera la interacción del chat tras finalizar el gesto
+     * @param {number} delay - Retraso en ms
+     */
+    function unlockChatPointerEvents(delay = 120) {
+        if (!chatWidget) return;
+
+        clearTimeout(releaseTimer);
+        releaseTimer = setTimeout(() => {
+            chatWidget.classList.remove('chat-gesture-lock');
+        }, delay);
+    }
+
+    /**
+     * Limpia estado al pasar a desktop
+     */
+    function handleResize() {
+        if (!chatWidget || isMobileViewport()) return;
+        chatWidget.classList.remove('chat-gesture-lock');
+    }
+
+    /**
+     * Inicializa la protección de scroll horizontal en la sección de restaurantes
+     */
+    function init() {
+        foodScroller = document.querySelector('#mangiare .overflow-x-auto');
+        chatWidget = document.getElementById('chat-widget');
+
+        if (!foodScroller || !chatWidget) return;
+
+        foodScroller.addEventListener('touchstart', lockChatPointerEvents, { passive: true });
+        foodScroller.addEventListener('touchmove', lockChatPointerEvents, { passive: true });
+
+        const releaseLock = () => unlockChatPointerEvents(120);
+        foodScroller.addEventListener('touchend', releaseLock, { passive: true });
+        foodScroller.addEventListener('touchcancel', releaseLock, { passive: true });
+
+        // Al desplazarse con inercia mantenemos el lock y lo soltamos al estabilizar.
+        foodScroller.addEventListener('scroll', () => {
+            lockChatPointerEvents();
+            unlockChatPointerEvents(160);
+        }, { passive: true });
+
+        window.addEventListener('resize', handleResize, { passive: true });
+    }
+
+    return {
+        init
+    };
+})();
+
+/* ============================================
    INICIALIZACIÓN GLOBAL
    ============================================ */
 
@@ -628,6 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ChatbotController.init();
     HeroCarouselController.init();
     LanguageSwitcherController.init();
+    MobileHorizontalScrollGuardController.init();
 
     console.log('✅ Tenuta Re di Roma - All modules initialized');
 });
