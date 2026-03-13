@@ -328,22 +328,56 @@ const ChatbotController = (function() {
     let fabOpenIcon = null;
     let fabCloseIcon = null;
     let notificationDot = null;
+    let closeTimer = null;
+    const CLOSE_ANIMATION_MS = 260;
+
+    /**
+     * Muestra la ventana de chat y activa su animación de entrada
+     */
+    function openWindow() {
+        if (!chatWindow) return;
+
+        clearTimeout(closeTimer);
+        chatWindow.style.display = 'flex';
+        void chatWindow.offsetHeight;
+        chatWindow.classList.add('open');
+        chatWindow.setAttribute('aria-hidden', 'false');
+    }
+
+    /**
+     * Cierra la ventana de chat y la desmonta visualmente al terminar la animación
+     */
+    function closeWindow() {
+        if (!chatWindow) return;
+
+        chatWindow.classList.remove('open');
+        chatWindow.setAttribute('aria-hidden', 'true');
+
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+            if (!isOpen) {
+                chatWindow.style.display = 'none';
+            }
+        }, CLOSE_ANIMATION_MS);
+    }
 
     /**
      * Alterna la visibilidad del chatbot
      */
     function toggle() {
+        if (!chatWindow) return;
+
         isOpen = !isOpen;
         
         if (isOpen) {
-            chatWindow.classList.add('open');
-            fabOpenIcon.style.display = 'none';
-            fabCloseIcon.style.display = '';
+            openWindow();
+            if (fabOpenIcon) fabOpenIcon.style.display = 'none';
+            if (fabCloseIcon) fabCloseIcon.style.display = '';
             if (notificationDot) notificationDot.style.display = 'none';
         } else {
-            chatWindow.classList.remove('open');
-            fabOpenIcon.style.display = '';
-            fabCloseIcon.style.display = 'none';
+            closeWindow();
+            if (fabOpenIcon) fabOpenIcon.style.display = '';
+            if (fabCloseIcon) fabCloseIcon.style.display = 'none';
         }
     }
 
@@ -355,6 +389,13 @@ const ChatbotController = (function() {
         fabOpenIcon = document.getElementById('chat-fab-open');
         fabCloseIcon = document.getElementById('chat-fab-close');
         notificationDot = document.getElementById('chat-notif-dot');
+
+        if (chatWindow) {
+            // Evita que un iframe oculto capture gestos en móviles.
+            chatWindow.classList.remove('open');
+            chatWindow.setAttribute('aria-hidden', 'true');
+            chatWindow.style.display = 'none';
+        }
 
         // Exponer función global para onclick inline
         window.toggleChatbot = toggle;
@@ -624,6 +665,10 @@ const MobileHorizontalScrollGuardController = (function() {
     let foodScroller = null;
     let chatWidget = null;
     let releaseTimer = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let startScrollLeft = 0;
+    let draggingHorizontally = false;
     const MOBILE_BREAKPOINT = '(max-width: 1023px)';
 
     /**
@@ -661,6 +706,59 @@ const MobileHorizontalScrollGuardController = (function() {
     function handleResize() {
         if (!chatWidget || isMobileViewport()) return;
         chatWidget.classList.remove('chat-gesture-lock');
+        if (foodScroller) {
+            foodScroller.classList.remove('dragging-horizontal');
+        }
+        draggingHorizontally = false;
+    }
+
+    /**
+     * Inicia seguimiento del gesto touch
+     * @param {TouchEvent} e
+     */
+    function handleTouchStart(e) {
+        if (!foodScroller || !isMobileViewport() || !e.touches?.length) return;
+
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        startScrollLeft = foodScroller.scrollLeft;
+        draggingHorizontally = false;
+        lockChatPointerEvents();
+    }
+
+    /**
+     * Fuerza fallback de desplazamiento horizontal en navegadores móviles conflictivos
+     * @param {TouchEvent} e
+     */
+    function handleTouchMove(e) {
+        if (!foodScroller || !isMobileViewport() || !e.touches?.length) return;
+
+        const deltaX = e.touches[0].clientX - touchStartX;
+        const deltaY = e.touches[0].clientY - touchStartY;
+
+        if (!draggingHorizontally) {
+            if (Math.abs(deltaX) <= Math.abs(deltaY) + 4) {
+                return;
+            }
+            draggingHorizontally = true;
+            foodScroller.classList.add('dragging-horizontal');
+        }
+
+        foodScroller.scrollLeft = startScrollLeft - deltaX;
+        lockChatPointerEvents();
+        unlockChatPointerEvents(180);
+        e.preventDefault();
+    }
+
+    /**
+     * Finaliza el gesto y restablece estado
+     */
+    function endTouchGesture() {
+        if (foodScroller) {
+            foodScroller.classList.remove('dragging-horizontal');
+        }
+        draggingHorizontally = false;
+        unlockChatPointerEvents(120);
     }
 
     /**
@@ -672,12 +770,11 @@ const MobileHorizontalScrollGuardController = (function() {
 
         if (!foodScroller || !chatWidget) return;
 
-        foodScroller.addEventListener('touchstart', lockChatPointerEvents, { passive: true });
-        foodScroller.addEventListener('touchmove', lockChatPointerEvents, { passive: true });
+        foodScroller.addEventListener('touchstart', handleTouchStart, { passive: true });
+        foodScroller.addEventListener('touchmove', handleTouchMove, { passive: false });
 
-        const releaseLock = () => unlockChatPointerEvents(120);
-        foodScroller.addEventListener('touchend', releaseLock, { passive: true });
-        foodScroller.addEventListener('touchcancel', releaseLock, { passive: true });
+        foodScroller.addEventListener('touchend', endTouchGesture, { passive: true });
+        foodScroller.addEventListener('touchcancel', endTouchGesture, { passive: true });
 
         // Al desplazarse con inercia mantenemos el lock y lo soltamos al estabilizar.
         foodScroller.addEventListener('scroll', () => {
